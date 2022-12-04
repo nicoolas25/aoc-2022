@@ -1,6 +1,4 @@
-PRIORITIES = [*('a'..'z'), *('A'..'Z')]
-  .each.with_index.with_object({}) { |(l, i), h| h[l] = i + 1 }
-  .freeze
+PRIORITIES = [*('a'..'z'), *('A'..'Z')].each.with_index(1).to_h
 
 lines = ARGF
   .each_line
