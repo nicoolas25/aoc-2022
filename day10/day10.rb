@@ -44,42 +44,36 @@ simulation = Simulation.new
 instructions = original_instructions.dup
 cycles_to_look_at = [20, 60, 100, 140, 180, 220]
 
-loop do
-  if simulation.can_receive_next_instruction?
-    simulation.receive(instructions.shift)
-  end
-
-  simulation.tick!
+cycles_to_look_at.last.times do
+  simulation.receive(instructions.shift) if simulation.can_receive_next_instruction?
 
   if cycles_to_look_at.include?(simulation.cycle_count)
     total_intensity += simulation.position * simulation.cycle_count
   end
 
-  break if simulation.cycle_count > cycles_to_look_at.last
+  simulation.tick!
 end
 
 puts total_intensity
 
 # Part 2
 
+COL_COUNT = 40
+ROW_COUNT = 6
+
 pixels = []
 simulation = Simulation.new
 instructions = original_instructions.dup
 
-(6 * 40).times do |crt_position|
-  break if instructions.empty?
+def pixel_at(crt_position, simulation)
+  sprite_range = Range.new(simulation.position - 1, simulation.position + 1)
+  sprite_range.cover?(crt_position % COL_COUNT) ? "#" : "."
+end
 
-  if simulation.can_receive_next_instruction?
-    simulation.receive(instructions.shift)
-  end
-
-  if ((crt_position % 40) - simulation.position).abs <= 1
-    pixels << "#"
-  else
-    pixels << "."
-  end
-
+(ROW_COUNT * COL_COUNT).times do |crt_position|
+  simulation.receive(instructions.shift) if simulation.can_receive_next_instruction?
+  pixels << pixel_at(crt_position, simulation)
   simulation.tick!
 end
 
-pixels.each_slice(40) { puts _1.join }
+pixels.each_slice(COL_COUNT) { puts _1.join }
