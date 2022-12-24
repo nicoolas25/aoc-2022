@@ -1,3 +1,6 @@
+# Solution inspired by the excellent work here:
+# https://github.com/juanplopes/advent-of-code-2022/blob/main/day16.py
+
 require "set"
 
 Valve = Struct.new(:name, :rate, :tunnels, :bitmask)
